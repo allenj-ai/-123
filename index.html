@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -2698,6 +2699,192 @@ body{background:var(--prd-bg);color:var(--prd-text);font-family:-apple-system,Bl
 
 <script>
 var PRD_STORAGE_KEY = 'socrates-prd-data-v1';
+var PRD_SOURCE_DATA = {
+  "tabs": [
+    "需求5、6、10、18",
+    "需求7、12、15、16",
+    "需求3、4、8、14、17、19、",
+    "创作者中心",
+    "个人中心",
+    "首页关注"
+  ],
+  "fields": [
+    "\n        市场卡片是列表页的核心展示单元，每张卡片代表一个预测市场。自上而下包含以下元素：\n        <br><br>\n        <strong>① 创作者信息行</strong>：左侧为创作者头像和用户名，右侧为收藏按钮（☆/★ 切换）<br><br>\n        <strong>② 市场主体区域</strong>：左侧为市场封面图标，右侧为市场标题（单行，超长渐变截断）和元数据标签行，标签行包含状态标签（进行中/结算中/已结算）、Vol（24h交易量）、Liq（流动性）<br><br>\n        <strong>③ 市场状态标签</strong>（实际颜色以UI 设计图为准）<br>\n        进行中：绿色<br>\n        结算中：红色<br>\n        已结算：灰色<br><br>\n        <strong>④ Chance 概率区和选项操作区</strong>：同之前逻辑一样\n      ",
+    "\n        在二元市场卡片中，用户可直接在卡片上快速下单，无需跳转详情页：<br><br>\n        <strong>点击 Yes / No 按钮</strong> → 弹出下单弹窗，默认选中对应方向<br>\n        <strong>点击卡片其他区域</strong>（标题、封面、状态标签等） → 跳转到市场详情页\n      ",
+    "\n        弹窗自上而下包含：<br><br>\n        • <strong>标题栏</strong>：市场 Emoji + 市场标题 + 关闭按钮<br>\n        • <strong>选项名称</strong>：当前选中要交易的选项<br>\n        • <strong>买入/卖出切换</strong>：Tab 切换买入或卖出模式<br>\n        • <strong>是/否方向选择</strong>：两个按钮，预选中用户点击的方向，可在弹窗中切换<br>\n        • <strong>金额输入</strong>：支持 +/- 按钮微调和滑动条拖拽<br>\n        • <strong>交易信息</strong>：可用余额和预计赢取金额<br>\n        • <strong>操作按钮</strong>：未登录显示\"登录\"，已登录显示\"确认下单\"\n      ",
+    "\n        在多选市场卡片中，用户同样可以在卡片上快速下单：<br><br>\n        <strong>点击折叠栏</strong> → 展开/收起选项列表（不跳转详情页）<br>\n        <strong>点击展开后的具体选项行</strong> → 弹出下单弹窗，\"选项\"字段自动填入该选项名称，价格根据该选项概率计算<br>\n        <strong>点击卡片其他区域</strong> → 跳转到市场详情页\n      ",
+    "\n        • 二元市场弹窗中的\"选项\"名称等于市场标题<br>\n        • 多选市场弹窗中的\"选项\"名称为用户点击的具体选项<br>\n        • 弹窗中的\"是/否\"价格根据各选项各自的概率独立计算\n      ",
+    "\n        <strong>🔵 蓝色区域（卡片主体）</strong><br>\n        创作者信息行、市场封面/标题、状态标签、Vol/Liq、Chance 概率区。<br>\n        点击 → <strong>跳转到市场详情页</strong><br><br>\n        <strong>🟢 绿色区域（选项操作区）</strong><br>\n        二元市场的 Yes/No 按钮，或多选市场展开后的选项行。<br>\n        点击 → <strong>弹出快速下单弹窗</strong><br><br>\n        <strong>⭐ 收藏按钮</strong> → 切换收藏状态，不跳转不弹窗<br>\n        <strong>📋 多选折叠栏</strong> → 展开/收起选项列表，不跳转\n      ",
+    "\n        当市场处于\"结算中\"或\"已结算\"时：<br>\n        • 选项按钮不可点击，不弹出下单弹窗<br>\n        • 点击卡片任意区域均跳转详情页（收藏按钮除外）\n      ",
+    "\n        在市场列表筛选栏中（\"排序\"和\"状态\"下拉框旁边），新增一个 <strong>☆ 收藏筛选按钮</strong>：<br><br>\n        <strong>按钮状态：</strong><br>\n        • 默认：灰色空心星 ☆，显示全部市场<br>\n        • 激活：金色实心星 ★，按钮边框变为金色高亮，仅显示用户收藏的市场<br>\n        • 再次点击取消筛选，恢复全部市场<br><br>\n        <strong>分类维度下的收藏筛选逻辑：</strong><br><br>\n        <strong>① 在 Trending（热门）/ New（最新）/ Closing Soon（即将结束）Tab 下：</strong><br>\n        点击收藏按钮后，显示用户收藏的 <strong>所有市场</strong>（不区分分类），即跨分类的全局收藏列表。<br><br>\n        <strong>② 在具体分类 Tab 下（加密货币/政治/体育/科技/Web3/文化/社会/其他）：</strong><br>\n        点击收藏按钮后，仅显示该分类下用户收藏的市场。例如：在\"加密货币\"分类下点击 ★，只显示属于\"加密货币\"分类且被用户收藏的市场。<br><br>\n        <strong>交互细节：</strong><br>\n        • 收藏筛选与排序、状态筛选可叠加使用<br>\n        • 在收藏筛选激活时，如果用户取消某个市场的收藏（点击卡片上的 ★ → ☆），该卡片立即从列表中隐藏<br>\n        • 切换分类 Tab 时，收藏筛选状态保持不变\n      ",
+    "\n        用户可通过以下入口进入\"创建市场\"页面：<br><br>\n        • 市场列表页分类栏右侧的 <strong>\"📊 创建市场\"</strong> 按钮<br>\n        • 创作者中心页面的 <strong>\"创建市场\"</strong> 按钮<br><br>\n        点击后跳转至独立的创建市场页面（非弹窗），页面顶部有\"← 返回\"按钮可返回上一页。\n      ",
+    "\n        创建市场表单包含以下字段（自上而下）：<br><br>\n        <strong>① 市场标题</strong> — 必填，最多 100 字符<br>\n        <strong>② 分类</strong> — 可多选标签（加密货币/政治/体育/科技/Web3/文化/社会/其他）<br>\n        <strong>③ 头像</strong> — 上传市场封面图片，支持本地预览<br>\n        <strong>④ 选项设置</strong> — 是/否（二元）或多选模式切换<br>\n        <strong>⑤ 规则描述</strong> — 必填，最多 1500 字符，描述结算规则<br>\n        <strong>⑥ 数据源</strong> — 可添加多条 URL 链接<br>\n        <strong>⑦ 封盘时间</strong> — 市场停止交易的时间，选填<br>\n        <strong>⑧ 结束时间</strong> — 市场到期进入结算流程的时间<br>\n        <strong>⑨ 流动性</strong> — 初始流动性，最低 200 USDT\n      ",
+    "\n        默认模式。固定两个选项 YES 和 NO：<br><br>\n        • 选项名称 <strong>不可编辑</strong>（只读置灰）<br>\n        • 初始概率可调整，默认各 50%<br>\n        • 隐藏\"添加选项\"和\"删除选项\"按钮<br>\n        • 支持\"自动计算\"：调整一个选项概率后，另一个自动补齐至 100%\n      ",
+    "\n        用于多结果预测场景（如\"美联储利率决定\"有多种可能）：<br><br>\n        • 选项名称 <strong>可自由编辑</strong><br>\n        • 可通过 <strong>+ 按钮</strong> 添加新选项，通过 <strong>✕ 按钮</strong> 删除选项（最少保留 2 个）<br>\n        • 初始概率支持手动输入，开启\"自动计算\"时自动均分<br>\n        • 所有选项概率之和必须等于 100%\n      ",
+    "\n        顶部的胶囊切换按钮可在两种模式间切换。切换时会重置选项列表为对应模式的默认状态。\n      ",
+    "\n        市场停止接受新订单的预设时刻。封盘后，用户无法再进行买入或卖出操作。<br><br>\n        • 常用于体育赛事等结果即将揭晓的场景<br>\n        • 封盘时间必须 ≤ 结束时间<br>\n        • 封盘时间属于选填",
+    "\n        市场到期后自动进入结算流程。<br><br>\n        • 必填字段<br>\n        • 结束时间 ≥ 封盘时间<br>\n        • 到达结束时间后市场进入\"结算中\"状态\n      ",
+    "\n        创作者需为市场提供初始流动性：<br><br>\n        • 最低 <strong>200 USDT</strong><br>\n        • 流动性越高，用户交易时的滑点越低<br>\n        • 创作者的收益来源于手续费分成，而非用户盈亏<br>\n        • 输入框右侧固定显示 USDT 单位标签\n      ",
+    "\n        创建市场采用 <strong>\"填写 → 预览 → 确认\"</strong> 三步流程：<br><br>\n        <strong>Step 1：填写表单</strong><br>\n        用户在独立的创建市场页面中填写所有必填字段，底部按钮显示\"创建\"。<br><br>\n        <strong>Step 2：弹窗预览</strong><br>\n        点击\"创建\"后，系统校验所有字段（标题必填、结束时间必填、封盘时间 ≤ 结束时间、流动性 ≥ 200）。校验通过后弹出预览弹窗（overlay），展示市场的完整信息摘要。创建页面保持不变，弹窗覆盖在上层。<br><br>\n        <strong>Step 3：确认创建</strong><br>\n        预览弹窗底部有两个按钮：<br>\n        • \"← 返回修改\"：关闭弹窗，回到表单编辑状态，保留已填内容<br>\n        • \"确认创建\"：提交创建请求\n      ",
+    "\n        点击\"创建\"时执行以下校验：<br><br>\n        • 市场标题不能为空<br>\n        • 结束时间不能为空<br>\n        • 封盘时间不能为空<br>\n        • 封盘时间不能晚于结束时间<br>\n        • 初始流动性不低于 200 USDT<br>\n        • 所有选项概率之和 = 100%<br><br>\n        校验不通过时弹出提示信息，不弹出预览弹窗。\n      ",
+    "\n        在创建表单的底部，固定展示一段风险提示（红色背景卡片），内容包括：<br><br>\n        • 创作者的收益模式说明（手续费分成，非用户盈亏）<br>\n        • 对市场标题和结算规则质量的要求<br>\n        • 模糊规则可能触发争议流程的提醒<br><br>\n        此提示为固定展示，不可关闭。\n      ",
+    "<br>",
+    "\n        市场详情页采用 <strong>左右两栏</strong> 布局：<br><br>\n        <strong>左侧 — 详情主区域</strong>：占据大部分宽度，自上而下包含头部信息区、内容 Tab 导航、各内容面板（图表/规则/进程/顶级持仓者/评论）以及用户数据子 Tab 区域。<br><br>\n        <strong>右侧 — 交易面板</strong>：无改动\n      ",
+    "\n        用户可通过以下方式进入市场详情页：<br><br>\n        • 在市场列表中点击卡片的 <strong>非选项区域</strong>（标题、封面、创作者信息、元数据等）<br>\n        • 通过分享链接直接打开\n      ",
+    "\n        头部信息区自左向右包含三个区块：<br><br>\n        <strong>① 创作者与封面列</strong><br>\n        创作者头像 + 用户名（顶部），市场封面图片（下方）<br><br>\n        <strong>② 市场信息列</strong><br>\n        • 市场标题<br>\n        • 元数据行：状态标签（进行中/结算中/已结算）、分类标签、交易量（Vol）、流动性（Liq）、结束日期<br><br>\n        <strong>③ 操作与倒计时列</strong><br>\n        • 封盘倒计时（天:时:分:秒），旁边有信息图标(i)，hover/点击显示封盘时间和结束时间的说明 tooltip<br>• 封盘倒计时结束后，显示距离截止时间的倒计时<br>\n        • 操作按钮行：收藏（☆/★）、分享（↗）、更多（···，下拉菜单含\"转发给好友\"和\"举报\"）\n      ",
+    "\n        头部下方是内容 Tab 导航栏，包含 5 个面板切换：<br><br>\n        <strong>① 图表</strong> — 无改动<br>\n        <strong>② 规则</strong> — 显示市场结算规则和数据源链接<br>\n        <strong>③ 进程</strong> — 显示市场生命周期时间线<br>\n        <strong>④ 顶级持仓者</strong> — 显示持仓量最大的用户排行<br>\n        <strong>⑤ 评论</strong> — 用户评论区（显示评论数量）<br><br>\n        Tab 栏最右侧有一个 <strong>\"流动性\"</strong> 按钮，和之前逻辑一样，无改动。\n      ",
+    "\n        • 点击 Tab 切换对应面板，仅左侧内容区域变化<br>\n        • 右侧交易面板始终保持可见<br>\n        • 图表、规则和进程这三个面板底部都有相同的用户数据子 Tab（持仓/交易记录/流动性/结算），顶级持仓者和评论则没有用户数据子 Tab（持仓/交易记录/流动性/结算）\n      ",
+    "\n和之前逻辑一样，无改动\n      ",
+    "\n和之前逻辑一样，无改动\n      ",
+    "\n        规则面板展示市场的结算规则和数据源，包含：<br><br>\n        <strong>① 规则文本</strong>：创作者编写的市场结算规则描述<br><br>\n        <strong>② 翻译按钮</strong>：点击\"🌐 翻译\"按钮可将规则文本翻译为用户当前设备语言（仅翻译规则文本，数据源链接不翻译）。再次点击恢复原文。<br><br>\n        <strong>③ 数据源链接</strong>：创作者提供的参考数据源 URL，可点击跳转至外部网站\n      ",
+    "\n        进程面板展示市场的完整生命周期，采用时间线形式，分为 6 个阶段：<br><br>\n        <strong>1. 交易</strong> — 市场活跃期，用户可自由买卖<br>\n        <strong>2. 封盘</strong> — 停止接受新订单<br>\n        <strong>3. 市场关闭</strong> — 和之前逻辑一样，无改动<br>\n        <strong>4. 结果提案</strong> — 和之前逻辑一样，无改动<br>\n        <strong>5. 质疑期</strong> — 和之前逻辑一样，无改动<br>\n        <strong>6. 最终结果</strong> — 和之前逻辑一样，无改动<br><br>\n        已完成的阶段显示为绿色实心圆，当前/未来阶段为灰色空心圆。阶段之间用连接线贯穿。\n      ",
+    "\n和之前逻辑一样，无改动\n      ",
+    "\n和之前逻辑一样，无改动\n      ",
+    "\n持仓和结算新增分享按钮，其他无改动\n      ",
+    "\n        持仓和结算面板中，每行右侧的 ↗ 按钮可打开分享弹窗，生成该笔持仓/结算的分享卡片。分享卡片包含市场标题、选项名、价格/盈亏数据等关键信息。\n      ",
+    "\n        \"顶级持仓者\"面板展示在当前市场中持仓量最大的用户列表：<br><br>\n        • 按持仓份额从大到小排列<br>\n        • 每行显示：用户头像+用户名、持仓份额<br>\n        • 二元市场没有选项下拉弹窗，只有yes no<div>• 多元市场有选项下拉弹窗，下拉选择对应的选项，展示其YES NO 的顶级持仓者</div><div>• YES 展示10个持仓最多的用户，NO 展示10个持仓最多的用户</div>\n      ",
+    "\n        评论面板位于内容 Tab \"评论 (数量)\" 下，提供完整的社区讨论功能。顶部显示评论总数及相关 Tab（顶级持仓者、持仓、动态）。<br><br>\n        <strong>发表评论</strong>：已登录用户可通过顶部输入框发表评论，点击\"发布\"按钮提交。\n      ",
+    "\n        支持最多 <strong>二级评论</strong>（即回复评论，不支持回复的回复嵌套）：<br><br>\n        <strong>一级评论</strong>：直接对市场发表的评论，独立展示在列表中。<br><br>\n        <strong>二级评论（回复）</strong>：<br>\n        • 缩进显示在一级评论下方<br>\n        • 头部带有 <strong>@用户名</strong> 标识回复对象<br>\n        • 头像和字号略小于一级评论<br>\n        • 默认折叠，显示\"N 条回复\"链接，点击可展开/收起\n      ",
+    "\n        如果评论用户在当前市场有持仓，用户名旁边会显示持仓标识徽章：<br><br>\n        • 格式：<strong>{份额数} {方向}</strong>，例如 \"383 是\"、\"3.5K 是\"、\"458 否\"<br>\n        • 方向为\"是\"时，徽章为绿底绿字<br>\n        • 方向为\"否\"时，徽章为红底红字<br>\n        • 份额数较大时自动缩写（如 3,500 → 3.5K）\n      <div>• 多元则显示\"数量+选项名称+YES or NO\",例如\"3.5K特朗普 Yes\"</div><div>• 持有该市场多个选项，则依次用卡片显示，例如\"3.5K特朗普 Yes\"、\"3.5K拜登 Yes\"</div>\n      ",
+    "\n        评论列表支持两种排序方式（通过下拉选择器切换）：<br><br>\n        • <strong>最新发布</strong>：按发表时间倒序排列（默认）<br>\n        • <strong>最受欢迎</strong>：按点赞数从多到少排列<br><br>\n        同时支持 <strong>\"持仓者\"筛选开关</strong>（Toggle）：<br>\n        • 关闭（默认）：显示所有评论<br>\n        • 开启：仅显示在当前市场有持仓的用户的评论\n      ",
+    "\n        <strong>点赞</strong>：<br>\n        • 每条评论（一级和二级）下方都有 ♡ 点赞按钮和点赞计数<br>\n        • 点击切换点赞/取消点赞，已点赞显示实心红色 ♥<br>\n        • 需要登录才能点赞<br><br>\n        <strong>更多操作菜单 (···)</strong>：<br>\n        每条评论右上角有\"···\"按钮，点击弹出菜单：<br>\n        • \"分享\" — 复制该评论的链接<br>\n        • \"举报\" — 举报不当评论\n      ",
+    "\n        分享功能有两种入口：<br><br>\n        <strong>① 分享市场</strong><br>\n        头部操作栏的分享按钮（↗）或更多菜单中的\"转发给好友\"，打开分享市场弹窗。<br><br>\n        <strong>② 分享仓位</strong><br>\n        持仓和结算子 Tab 中，每行右侧的 ↗ 按钮，打开分享持仓/结算弹窗。\n      ",
+    "\n        分享市场弹窗中的卡片预览，根据市场类型展示不同字段：<br><br>\n        <strong>二元市场卡片字段：</strong><br>\n        • 市场头像 + 标题<br>\n        • 分类标签 + 状态标签<br>\n        • Chance 概率（大号百分比）<br><br>\n        <strong>多元市场卡片字段：</strong><br>\n        • 市场头像 + 标题<br>\n        • 分类标签 + 状态标签<br>\n        • 概率最高的前两个选项，显示：选项名 + 概率百分比\n      ",
+    "\n        分享仓位弹窗中的卡片预览，展示用户的持仓/结算数据：<br><br>\n        • 市场名称 + 标题<br>\n        • 选项名称<br>\n        • 当前价&nbsp;<br>\n        • 收益金额或者收益率（二选一）\n      ",
+    "\n        当前版本暂未接入 Telegram 和 X 的分享 API。点击\"分享到 Telegram\"或\"分享到 X\"按钮后，<strong>复制固定格式的分享文案到剪贴板</strong>，并弹出 toast 提示\"已复制分享文案，请粘贴发送\"。<br><br>\n        <strong>分享市场文案（TG / X 通用）：</strong><br>\n        <code>我正在 Socrate 预测「{市场标题}」</code><br>\n        <code>👉 {市场链接}?ref={用户邀请码}</code><br><br>\n        <strong>分享持仓文案：</strong><br>\n        <code>我正在 Socrate 预测「{市场标题}」，当前盈利 {收益率}%！</code><br>\n        <code>👉 {市场链接}?ref={用户邀请码}</code><br><br>\n        <strong>分享结算文案：</strong><br>\n        <code>我在 Socrate 预测「{市场标题}」最终收益 {盈亏金额/收益率}！</code><br>\n        <code>👉 {市场链接}?ref={用户邀请码}</code><br><br>\n        所有文案末尾都包含用户的个人邀请链接（ref 参数），便于追踪邀请来源。<br><br>\n        此外弹窗还提供一个 <strong>\"📋 复制链接\"</strong> 按钮，仅复制市场链接（含 ref），不含文案。\n      ",
+    "\n        <strong>Web 端：</strong><br>\n        • 点击 TG / X 按钮 → 复制文案到剪贴板 + toast 提示<br>\n        • \"复制链接\"按钮 → 仅复制市场 URL<br>\n        • 分享卡片预览在弹窗中展示，不生成图片<br><br>\n        <strong>H5 ：</strong><br>\n        • 与 Web 端逻辑相同<br>\n        • 支持复制文案 + toast 提示<br><br>\n        <strong>APP 端：</strong><br>\n        • 点击 TG → 调用 Telegram 的 URL 拉起 TG 并填充文案<br>\n        • 点击 X → 调用 Twitter Intent URL 拉起 X 发帖界面<br>\n        • 分享卡片可生成为图片，一并附带到分享内容中<br>\n        • 如果 TG 和 X 无法调用 URL，则改为与 Web 端一致：点击 TG / X 按钮 → 复制文案到剪贴板 + toast 提示\n      ",
+    "\n        创作者中心是面向 <strong>市场创建者（Creator）</strong> 的专属管理后台，提供其创建的所有预测市场的全生命周期管理与数据看板。<br><br>\n        <strong>目标用户：</strong>任何已创建过市场的用户，或有意创建市场的用户。<br><br>\n        <strong>入口位置：</strong><br>\n        • 顶部导航栏 → \"创作者中心\" 按钮<br>\n        • 个人中心 → 快捷入口<br><br>\n        <strong>核心价值：</strong><br>\n        • 让创作者一站式掌握所有市场的运营状态与收益情况<br>\n        • 提供快捷的\"创建市场\"入口，降低创建门槛<br>\n        • 通过数据驱动，帮助创作者优化市场质量\n      ",
+    "\n        数据看板位于创作者中心顶部，分为两个区域：<br><br>\n        <strong>① 核心指标卡片</strong><br>\n        页面最顶部突出展示 <strong>\"总收益\"</strong>，字号最大，让创作者第一时间感知收益状况。<br><br>\n        <strong>② 五项子指标行</strong><br>\n        以等宽网格展示：已结算、待结算、总交易量、总市场数、总交易人数。<br><br>\n        <strong>数据实时性：</strong><br>\n        • 总收益 = 已结算 + 待结算（实时计算）<br>\n        • 待结算收益来源于链上合约的预估值，结算完成后转为已结算<br>\n        • 总交易人数为去重后的独立用户数<br><br>\n        <strong>收益来源说明：</strong><br>\n        创作者收益来自市场交易手续费的分成，具体比例由平台费率决定。创建者初始注入的流动性在市场结算后可取回（扣除亏损部分）。\n      ",
+    "\n        数据看板下方为市场列表区域，通过 Tab 切换显示三种状态：<br><br>\n        <strong>① 进行中</strong><br>\n        展示正在交易的市场。表格字段：市场名称、交易量、交易人数、我的/总流动性、待结算收益、结束时间。<br><br>\n        <strong>② 结算中</strong><br>\n        展示已截止、进入结算流程的市场。额外字段 <strong>\"市场阶段\"</strong> 显示当前所处结算环节：<br>\n        • <span style=\"color:#3b82f6\">提案期</span> — 等待 Oracle 或社区提交结果提案<br>\n        • <span style=\"color:#f59e0b\">公示期</span> — 结果已提交，处于公示等待异议阶段<br>\n        • <span style=\"color:#ef4444\">争议期</span> — 结果被挑战，进入仲裁投票流程<br><br>\n        <strong>③ 已结算</strong><br>\n        展示已完成结算的市场。额外字段包括：已结算收益、我的流动性、结算流动性（实际取回）、总盈亏、结算时间。<br><br>\n        <strong>表格交互：</strong><br>\n        • 点击行可跳转至该市场详情页<br>\n        • 支持按列排序（点击列头切换升/降序）\n      ",
+    "\n        Tab 右侧提供 <strong>排序</strong> 和 <strong>搜索</strong> 工具栏：<br><br>\n        <strong>排序 ▾ 下拉菜单：</strong><br>\n        支持四个排序维度，每个维度可切换升/降序（点击箭头切换）：<br>\n        • <strong>创建时间</strong>（默认，降序 = 最新优先）<br>\n        • <strong>结束时间</strong>（降序 = 最近到期优先）<br>\n        • <strong>交易量</strong>（降序 = 最活跃优先）<br>\n        • <strong>收益</strong>（降序 = 最高收益优先）<br><br>\n        排序作用于当前激活的 Tab（进行中/结算中/已结算），切换 Tab 时保持排序状态。<br><br>\n        <strong>搜索：</strong><br>\n        输入关键词对市场标题进行模糊匹配，实时过滤当前 Tab 内的市场列表。清空搜索框恢复完整列表。\n      ",
+    "\n        创作者中心页面头部右上角常驻 <strong>\"创建市场\"</strong> 按钮：<br><br>\n        • 点击后跳转至独立的市场创建页面（非弹窗）<br>\n        • 创建页面表单详情见 <strong>\"需求7、12、15、16\" Tab</strong> 中的\"创建入口与表单概览\"<br><br>\n        <strong>创建条件：</strong><br>\n        • 用户需已连接钱包<br>\n        • 钱包余额 ≥ 200 USDT（初始流动性最低要求）<br>\n        • 若余额不足，点击按钮时弹出提示：「余额不足，创建市场至少需要 200 USDT 作为初始流动性」<br><br>\n        <strong>创建成功后：</strong><br>\n        • 自动返回创作者中心<br>\n        • 新市场出现在\"进行中\"Tab 列表顶部<br>\n        • 数据看板\"总市场数\" +1\n      ",
+    "\n        个人资料卡片位于个人中心页面顶部，自上而下包含：<br><br>\n        <strong>① 头像区域</strong><br>\n        圆形头像，点击可更换头像（上传本地图片）。<br><br>\n        <strong>② 用户名 + 认证标识</strong><br>\n        • 用户名右侧显示认证徽章（如 KOL 认证 \"V\"）<br>\n        • 用户名旁有 ✏️ 图标，点击可编辑个人资料（昵称、简介、头像）<br><br>\n        <strong>③ Handle 与钱包地址</strong><br>\n        • @handle 格式的用户 ID<br>\n        • 钱包地址缩略显示（首8末4），带\"📋\"复制按钮<br><br>\n        <strong>④ 认证徽章标签</strong><br>\n        已通过的认证以彩色标签展示（如 \"🏅 KOL 认证\"），未认证的不展示标签。<br><br>\n        <strong>⑤ 社交数据</strong><br>\n        展示\"关注数\"、\"粉丝数\"和\"排名\"，点击关注/粉丝可切换到对应 Tab。<br><br>\n        <strong>⑥ 个人简介</strong><br>\n        用户自定义的简介文本，最大 200 字符。<br><br>\n        <strong>⑦ 邀请码</strong><br>\n        用户专属邀请码，带复制功能。\n      ",
+    "\n        资料卡右上角展示三个认证徽章图标，分为\"已点亮\"和\"灰色（未认证）\"两种状态：<br><br>\n        <strong>🏅 KOL 认证</strong><br>\n        • 适用对象：预测市场领域的KOL<br>\n        • 认证条件：粉丝 ≥ 5,00(或者我们指定的用户，后管可配)<br>\n        • 权益：个人主页加 \"V\" 标识<br><br>\n        <strong>📰 媒体认证</strong><br>\n        • 适用对象：新闻媒体、资讯平台、自媒体<br>\n        • 认证条件：我们指定的用户，后管可配<br>\n        • 权益：加 \"M\" 标识<br><br>\n        <strong>🎫 PASS 卡认证</strong><br>\n        • 适用对象：持有 One World Pass NFT 的用户<br>\n        • 认证条件：钱包内持有有效的 PASS NFT，自动点亮<br>\n        • 权益：同PASS 权益<div><br>\n        <strong>交互逻辑：</strong><br>\n        • 已认证：鼠标放到徽章显示该徽章名称<br>\n        • 未认证：点击弹出认证说明与\"开始认证\"入口，灰色 + 虚线边框 + 半透明\n      </div>",
+    "\n        位于个人资料卡下方，展示当前用户的核心交易数据：<br><br>\n        <strong>四项核心指标：</strong><br>\n        • <strong>🟡 仓位价值：</strong>当前持有的所有仓位的市值总和（实时计算）<br>\n        • <strong>📈 盈亏：</strong>已实现 + 未实现盈亏总额，正值绿色、负值红色<br>\n        • <strong>📊 总交易量：</strong>用户历史累计交易额<br>\n        • <strong>✅ 总市场：</strong>用户参与过交易的市场总数<br><br>\n        <strong>Private Account 开关：</strong><br>\n        卡片右上角有\"Private Account\"开关（Toggle）：<br>\n        • <strong>关闭（默认）：</strong>所有人可查看你的数据概览、仓位、动态、评论<br>\n        • <strong>开启：</strong>其他用户查看你的个人主页时，数据和内容区域会被模糊遮罩，显示\"🔒 该用户已开启隐私保护\"提示<br>\n        • 仅影响他人查看视角，本人始终可见全部信息\n      ",
+    "\n        \"仓位\" Tab 展示用户当前持有的所有市场仓位：<br><br>\n        <strong>列表字段：</strong><br>\n        • <strong>市场：</strong>市场标题 + 持仓方向（YES/NO）+ 现价 + 份额数量<br>\n        • <strong>持仓均价：</strong>用户买入的持仓<br>\n        • <strong>市场价值：</strong>当前持仓的市场价值<br>\n        • <strong>收益：</strong>未实现盈亏<br>\n        • <strong>分享：</strong>\"↗\" 按钮，点击弹出分享菜单<br><br>\n        <strong>排序筛选</strong>（优先级不高）<strong>：</strong><br>\n        列表顶部有排序下拉，支持按\"金额\"、\"收益率\"、\"时间\"排序。<br><br>\n        <strong>交互：</strong><br>\n        • 点击仓位行可跳转至对应市场详情页<br>\n        • 空仓位状态显示\"暂无持仓\"空态提示\n      ",
+    "\n        \"动态\" Tab 以时间线形式展示用户的所有交易行为记录：<br><br>\n        <strong>四种动态类型：</strong><br>\n        • <span style=\"display:inline-block;padding:1px 6px;border-radius:3px;background:rgba(34,197,94,0.15);color:#22c55e;font-weight:600\">BUY</span> 买入 — 用户在某市场买入 YES/NO 份额<br>\n        • <span style=\"display:inline-block;padding:1px 6px;border-radius:3px;background:rgba(239,68,68,0.15);color:#ef4444;font-weight:600\">SELL</span> 卖出 — 用户在某市场卖出 YES/NO 份额，展示获利/亏损<br>\n        • <span style=\"display:inline-block;padding:1px 6px;border-radius:3px;background:rgba(99,102,241,0.15);color:#6366f1;font-weight:600\">LP</span> 添加流动性 — 用户向某市场添加 USDT 流动性<br>\n        • <span style=\"display:inline-block;padding:1px 6px;border-radius:3px;background:rgba(245,158,11,0.15);color:#f59e0b;font-weight:600\">结算</span> 结算 — 市场结算完成，展示最终盈亏<br><br>\n        <strong>每条动态包含：</strong><br>\n        • 用户头像 + 用户名<br>\n        • 操作描述（份数、价格、盈亏）<br>\n        • 关联市场链接（可点击跳转）<br>\n        • 时间戳（右下角）<br>\n        • 分享按钮（右上角）<br><br>\n        <strong>分享按钮交互：</strong><br>\n        点击\"↗ 分享\"弹出分享菜单，提供以下选项：<br>\n        • 复制链接<br>\n        • 分享到 Telegram / X<br>\n        • 推送给全部粉丝<br>\n        • 选择好友分享（互关用户）\n      ",
+    "\n        \"评论\" Tab 展示用户在各市场发表的所有评论：<br><br>\n        <strong>每条评论包含：</strong><br>\n        • <strong>评论人头像</strong> — 圆形头像，可点击跳转到该用户主页<br>\n        • <strong>评论人ID</strong> — 用户名 + 认证标识 + @handle<br>\n        • <strong>关联市场</strong> — \"评论于 [市场名]\"，市场名可点击跳转<br>\n        • <strong>评论内容</strong> — 纯文本，最长 500 字符<br>\n        • <strong>互动数据</strong> — 时间、👍 点赞数、💬 回复数<br><br>\n        <strong>交互逻辑：</strong><br>\n        • 点击评论人头像/用户名 → 跳转至该用户个人主页<br>\n        • 点击市场名 → 跳转至市场详情页的评论区<br>\n        • 点击 👍 → 点赞/取消点赞<br>\n        • 点击 💬 → 展开回复列表 / 跳转到评论详情\n      ",
+    "\n        <strong>\"关注中\" Tab：</strong><br>\n        展示用户关注的所有用户，每个用户卡片包含：<br>\n        • 头像（可点击跳转到对方主页）<br>\n        • 用户名 + 认证标识<br>\n        • @handle<br>\n        • 核心数据摘要（胜率、交易量、排名 或 媒体粉丝数）<br>\n        • 操作按钮：\"已关注\"（点击可取消关注 / \"关注\"按钮）<br><br>\n        <strong>\"粉丝\" Tab：</strong><br>\n        展示关注当前用户的所有粉丝，结构与\"关注中\"一致。<br>\n        • 如果该粉丝也是你的关注对象 → 按钮显示\"已关注\"（互关）<br>\n        • 如果你未关注该粉丝 → 按钮显示\"关注\"（单向）<br><br>\n        <strong>互关定义（好友）：</strong><br>\n        双方互相关注即为\"好友\"，好友在分享功能中可被选择为指定分享对象。<br><br>\n        <strong>点击头像/用户名：</strong><br>\n        跳转到该用户的个人主页（参见\"他人主页\"章节）。\n      ",
+    "\n        \"收藏\" Tab 展示用户收藏（☆→★）的市场列表：<br><br>\n        <strong>每条收藏包含：</strong><br>\n        • <strong>市场标题</strong>（可点击跳转市场详情）<br>\n        • <strong>分类标签 + 交易量 + Liq</strong>（辅助信息行）<br>\n        • <strong>YES 价格</strong>（当前概率指示）<br>\n        • <strong>状态标签</strong>（进行中/结算中/已结算）<br>\n        • <strong>分享按钮 \"↗\"</strong>（弹出分享菜单）<br><br>\n        <strong>列表排序：</strong>按收藏时间倒序排列（最新收藏在最上方）。<br><br>\n        <strong>空状态：</strong>无收藏市场时显示\"还没有收藏的市场，去市场列表看看吧\"。\n      ",
+    "\n        点击任何用户头像 / 用户名可进入该用户的个人主页。<br><br>\n        <strong>页面结构（与本人主页一致）：</strong><br>\n        • 顶部资料卡：头像、用户名、认证标识、社交数据<br>\n        • \"← 返回\"按钮返回上一页<br>\n        • \"关注 / 已关注\"按钮（替代本人的编辑按钮）<br>\n        • 数据概览卡片<br>\n        • 活动 Tab（仓位、动态、评论、关注中、粉丝、收藏）<br><br>\n        <strong>隐私保护（Private Account）：</strong><br>\n        当被查看的用户开启了\"Private Account\"时：<br>\n        • 资料卡正常展示（用户名、头像、粉丝/关注数可见）<br>\n        • 资料卡下方显示 <span style=\"display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;vertical-align:middle\"></span> Private Account 标识<br>\n        • 数据概览 + 所有 Tab 内容区域添加 <strong>模糊滤镜（blur 6px）</strong><br>\n        • 内容区域上覆盖半透明遮罩层，中间显示 \"🔒 该用户已开启隐私保护\"<br>\n        • 遮罩内容不可选中、不可交互（pointer-events: none）\n      ",
+    "\n        分享功能贯穿个人中心的仓位、动态、收藏三个 Tab，点击\"↗ 分享\"按钮触发：<br><br>\n        <strong>分享菜单选项：</strong><br>\n        • <strong>📋 复制链接</strong> — 复制当前内容的分享链接到剪贴板<br>\n        • <strong>📨 Telegram</strong> — 唤起 Telegram 分享（Deep Link）<br>\n        • <strong>🐦 X (Twitter)</strong> — 唤起 X 分享（预填文案 + 链接）<br>\n        • <strong>📢 推送给全部粉丝</strong> — 向所有粉丝发送站内推送通知<br>\n        • <strong>选择好友</strong> — 列出所有互关用户，勾选后定向分享<br><br>\n        <strong>好友定义：</strong><br>\n        互关（双方互相关注）的用户即为好友，好友列表展示头像 + 用户名 + \"互关\"标签。<br><br>\n        <strong>交互细节：</strong><br>\n        • 菜单以浮层形式出现在按钮附近<br>\n        • 点击菜单外区域自动关闭<br>\n        • 同一时间只显示一个分享菜单<br>\n        • 首页\"关注\"页面的分享逻辑与个人中心完全一致\n      ",
+    "\n        \"首页关注\"是首页顶部 Tab 之一，提供用户关注列表的实时动态信息流。<br><br>\n        <strong>入口位置：</strong><br>\n        首页顶部分类 Tab 栏中的 <strong>\"关注\"</strong> 标签。<br><br>\n        <strong>页面布局 — 两栏结构：</strong><br>\n        • <strong>左侧主区域（约 70%）：</strong>动态 Feed 流 + 内容筛选 Tab<br>\n        • <strong>右侧侧栏（约 30%）：</strong>热门市场、推荐关注、关注数据<br><br>\n        当屏幕宽度 &lt; 900px 时，侧栏隐藏，主区域占满宽度（响应式适配）。<br><br>\n        <strong>页面标题：</strong><br>\n        顶部显示\"关注动态\"标题 + 右侧副文字\"来自你关注的人的实时动态\"。\n      ",
+    "\n        Feed 区域顶部提供四个筛选 Tab：<br><br>\n        <strong>① 全部</strong><br>\n        显示所有类型的动态，按时间倒序排列。<br><br>\n        <strong>② 📈 交易</strong><br>\n        仅显示交易相关动态：<br>\n        • 买入（BUY）— 关注的人买入了 YES/NO 份额<br>\n        • 卖出（SELL）— 关注的人卖出了 YES/NO 份额<br>\n        • 添加流动性（LP）— 关注的人向市场添加了流动性<br>\n        • 创建新市场 — 关注的人创建了新的预测市场<br><br>\n        <strong>③ 💰 结算</strong><br>\n        仅显示市场结算相关动态：<br>\n        • 关注的人在某市场结算获利/亏损<br>\n        • 关注的市场已结算（结果公告类）<br><br>\n        <strong>④ 💬 互动</strong><br>\n        仅显示社交互动类动态：<br>\n        • 有人关注了你<br>\n        • 有人回复了你的评论<br>\n        • 有人赞了你的评论<br>\n        • 好友分享了内容给你\n      ",
+    "\n        每条动态 Item 由以下元素组成（从左到右、从上到下）：<br><br>\n        <strong>①&nbsp;</strong><strong>用户信息行</strong><br>\n        • 用户名（加粗，可点击跳转主页）<br>• 用户头像<br>\n        • 认证徽章（如 V / M）<br>\n        • @handle<br>\n        • 时间戳（右对齐）<br><br><strong>②</strong><strong>动态正文</strong><br>\n        描述具体行为，关键数据高亮（份额、金额、方向）。<br><br><strong>③&nbsp;</strong><strong>&nbsp;关联市场</strong><br>市场标题，可点击跳转到市场详情页。<br><br><strong>④</strong><strong>&nbsp;互动操作栏</strong><br>\n        • 💬 评论数（点击可展开评论）<br>\n        • ❤ 点赞数（点击点赞/取消）<br>\n        • ↗ 分享（点击弹出分享菜单，逻辑同个人中心）\n      ",
+    "\n        右侧边栏固定展示三个信息模块：<br><br>\n        <strong>① 🔥 热门市场</strong><br>\n        展示平台当前最热门的市场 Top 3-5，按24h交易量排序。<br>\n        • 显示市场标题（截断）+ YES 概率<br>\n        • 点击可直接跳转到市场详情页<br>\n        • 数据每 5 分钟刷新<br><br>\n        <strong>② 👤 推荐关注</strong><br>\n        基于算法推荐可能感兴趣的用户：<br>\n        • 推荐逻辑：你的关注对象也关注了 Ta / 与你交易偏好相似 / 近期热门 KOL<br>\n        • 每个推荐用户显示头像 + 用户名 + \"关注\"按钮<br>\n        • 点击\"关注\"直接关注，按钮变为\"已关注\"<br>\n        • 最多展示 5 个推荐<div>PS：如果来不及做推荐算法，可以选择粉丝量最多的前100个用户，每次刷新随机抽取5个给用户展示<br><br>\n        <strong>③ 📊 你的关注数据</strong><br>\n        简要展示当前用户的关注数和粉丝数，方便快速查看。<br><br>\n        <strong>响应式行为：</strong><br>\n        屏幕宽度 &lt; 900px 时侧栏隐藏（display: none），Feed 区域占满宽度。\n      </div>",
+    "\n        \"💬 互动\" Tab 下展示的特殊动态类型：<br><br>\n        <strong>① 关注通知</strong><br>\n        • \"XXX 关注了你\" / \"XXX 和 YYY 关注了你\"<br>\n        • 提供\"👤 回关\"按钮（点击后变为\"✅ 已回关\"）<br>\n        • 不显示关联市场（纯社交行为）<br><br>\n        <strong>② 评论回复</strong><br>\n        • \"XXX 回复了你的评论\"<br>\n        • 引用原始评论文本片段<br>\n        • 显示关联市场名（评论所在市场）<br>\n        • 提供\"💬 回复\"按钮<br><br>\n        <strong>③ 点赞通知</strong><br>\n        • \"XXX 和其他 N 人赞了你的评论\"<br>\n        • 点赞聚合展示（不逐条通知）<br>\n        • 提供\"💬 查看评论\"链接<br><br>\n        <strong>④ 好友分享</strong><br>\n        • \"XXX 分享了一个仓位/市场/动态给你\"<br>\n        • 展示分享内容卡片（缩略版）<br><br>\n        <strong>互动行为说明：</strong><br>\n        • 回关为即时操作，不需要确认弹窗<br>\n        • 多人关注/点赞做聚合，避免通知轰炸<br>\n        • 所有互动动态按时间倒序排列\n      "
+  ],
+  "titles": [
+    "卡片元素说明",
+    "交互说明",
+    "下单弹窗内容",
+    "交互说明",
+    "与二元市场的区别",
+    "点击区域规则",
+    "不可操作状态",
+    "收藏筛选功能",
+    "创建入口",
+    "表单字段一览",
+    "是/否模式（Binary）",
+    "多选模式（Multi-option）",
+    "模式切换",
+    "封盘时间",
+    "结束时间",
+    "初始流动性",
+    "提交流程",
+    "校验规则",
+    "风险提示内容",
+    "",
+    "整体布局",
+    "进入方式",
+    "头部元素说明",
+    "Tab 列表",
+    "切换行为",
+    "图表区域",
+    "选项概率表",
+    "规则内容",
+    "市场生命周期",
+    "交易面板元素",
+    "联动逻辑",
+    "子 Tab 说明",
+    "分享功能",
+    "顶级持仓者",
+    "评论区概览",
+    "评论层级",
+    "持仓标识",
+    "排序与筛选",
+    "点赞与更多操作",
+    "分享入口",
+    "分享市场 — 卡片字段",
+    "分享仓位 — 卡片字段",
+    "分享到 TG / X — 固定文案",
+    "多端分享方案",
+    "功能定位",
+    "看板说明",
+    "三状态 Tab 切换",
+    "排序功能",
+    "创建入口说明",
+    "资料卡片结构",
+    "徽章类型与认证",
+    "数据指标说明",
+    "仓位列表说明",
+    "动态 Feed 说明",
+    "评论列表说明",
+    "列表说明",
+    "收藏列表说明",
+    "他人主页",
+    "分享菜单说明",
+    "页面定位",
+    "四类 Tab 筛选",
+    "Feed Item 组成",
+    "侧栏模块",
+    "互动类动态"
+  ],
+  "sectionTitles": [
+    "卡片组成元素（需求5、6、10）",
+    "二元市场 — 快速下单",
+    "多选市场 — 快速下单（需求18）",
+    "卡片点击区域划分",
+    "市场列表 — 收藏筛选",
+    "创建入口与表单概览（需求7和15）",
+    "选项设置 — 是/否 vs 多选",
+    "时间设置与流动性（需求12）",
+    "预览与确认创建（需求16）",
+    "风险提示与创作者须知",
+    "页面整体布局（需求3和4）",
+    "头部信息区",
+    "内容 Tab 导航",
+    "图表面板",
+    "规则面板（需求17）",
+    "进程面板",
+    "交易面板（右侧）",
+    "用户数据区（子 Tab）",
+    "顶级持仓者（需求19）",
+    "评论",
+    "分享功能（需求8和14）",
+    "功能概述与入口",
+    "数据看板（Stats Dashboard）",
+    "市场列表 — 三状态 Tab",
+    "排序与搜索",
+    "创建市场入口",
+    "个人资料卡片（Profile Card）",
+    "认证徽章体系（Badge System）",
+    "数据概览卡片（Stats Overview）",
+    "活动 Tab — 仓位（Positions）",
+    "活动 Tab — 动态（Activity Feed）",
+    "活动 Tab — 评论（Comments）",
+    "关注中 / 粉丝列表",
+    "活动 Tab — 收藏（Favorites）",
+    "他人主页与隐私保护",
+    "分享功能（Share Menu）",
+    "页面概述与布局",
+    "动态分类 Tab 筛选",
+    "Feed Item 结构",
+    "右侧边栏（Sidebar）",
+    "互动操作与特殊动态"
+  ],
+  "savedAt": "2026-02-25T07:20:42.208Z"
+};
 
 function switchPrdTab(btn, idx) {
   document.querySelectorAll('.prd-sidebar-item').forEach(function(b){ b.classList.remove('active'); });
@@ -2809,13 +2996,24 @@ function prdLoad() {
 
 async function prdLoadFromBundledJson() {
   try {
-    var bundledPath = encodeURI('prd-edits-2026-02-25 (1).json');
+    var bundledPath = encodeURI('prd-edits-2026-02-25.json');
     var resp = await fetch(bundledPath, { cache: 'no-store' });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var data = await resp.json();
     prdApplyData(data);
     localStorage.setItem(PRD_STORAGE_KEY, JSON.stringify(data));
     prdShowToast('已加载最新 JSON 编辑内容 ✓');
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function prdLoadFromSourceData() {
+  try {
+    if (!PRD_SOURCE_DATA || !Array.isArray(PRD_SOURCE_DATA.fields)) return false;
+    prdApplyData(PRD_SOURCE_DATA);
+    localStorage.setItem(PRD_STORAGE_KEY, JSON.stringify(PRD_SOURCE_DATA));
     return true;
   } catch (e) {
     return false;
@@ -2874,6 +3072,8 @@ document.addEventListener('keydown', function(e) {
 })();
 
 (async function initPrdData() {
+  var loadedFromSource = prdLoadFromSourceData();
+  if (loadedFromSource) return;
   var loaded = await prdLoadFromBundledJson();
   if (!loaded) prdLoad();
 })();
